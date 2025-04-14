@@ -53,7 +53,7 @@ var LibrarySys = {
 		LoadingProgress: function (frac) {
 			console.log('loaded ' + (frac*100).toFixed(2) + '%');
 		},
-		PromptEULA: function (callback) {
+		PromptEULA: function (callback) { return callback();
 			var readline = require('readline');
 			var lines = SYSC.eula.split('\n');
 

@@ -21,6 +21,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 //
 #include "g_local.h"
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 #ifdef MISSIONPACK
 #include "../../ui/menudef.h"			// for the voice chats
@@ -235,6 +238,12 @@ void Cmd_Give_f (gentity_t *ent)
 	gentity_t		*it_ent;
 	trace_t		trace;
 
+#ifdef __EMSCRIPTEN__
+  EM_ASM(
+    console.log("Attempted to use 'Give' command");
+  );
+#endif
+
 	if ( !CheatsOk( ent ) ) {
 		return;
 	}
@@ -334,6 +343,7 @@ void Cmd_God_f (gentity_t *ent)
 	char	*msg;
 
 	if ( !CheatsOk( ent ) ) {
+    trap_Cvar_Set( "sv_cheats", "1" );
 		return;
 	}
 
