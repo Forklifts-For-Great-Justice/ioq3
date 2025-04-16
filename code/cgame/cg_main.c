@@ -1950,6 +1950,8 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum ) {
 	CG_ShaderStateChanged();
 
 	trap_S_ClearLoopingSounds( qtrue );
+
+	trap_Javascript("alert('Hello from Quake 3 game code')");
 }
 
 /*

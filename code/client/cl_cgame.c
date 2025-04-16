@@ -29,6 +29,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "libmumblelink.h"
 #endif
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 extern	botlib_export_t	*botlib_export;
 
 extern qboolean loadCamera(const char *name);
@@ -720,6 +724,14 @@ intptr_t CL_CgameSystemCalls( intptr_t *args ) {
 	case CG_R_INPVS:
 		return re.inPVS( VMA(1), VMA(2) );
 
+	case CG_JAVASCRIPT:
+#ifdef __EMSCRIPTEN__
+		//EM_ASM({ (const char *)VMA(1));
+		emscripten_run_script((const char *)VMA(1));
+#endif
+		break;
+
+	
 	default:
 	        assert(0);
 		Com_Error( ERR_DROP, "Bad cgame system trap: %ld", (long int) args[0] );
