@@ -1318,6 +1318,45 @@ static void SV_ConTell_f(void) {
 	SV_SendServerCommand(cl, "chat \"%s\"", text);
 }
 
+/*
+==================
+SV_ConJavascript_f
+==================
+*/
+static void SV_ConJavascript_f(void) {
+	char	*p;
+	char	text[1024];
+	client_t	*cl;
+
+	// make sure server is running
+	if ( !com_sv_running->integer ) {
+		Com_Printf( "Server is not running.\n" );
+		return;
+	}
+
+	if ( Cmd_Argc() < 3 ) {
+		Com_Printf ("Usage: javascript <client number> <text>\n");
+		return;
+	}
+
+	cl = SV_GetPlayerByNum();
+	if ( !cl ) {
+		return;
+	}
+
+	//strcpy (text, "console_javascript: ");
+	p = Cmd_ArgsFrom(3);
+
+	if ( *p == '"' ) {
+		p++;
+		p[strlen(p)-1] = 0;
+	}
+
+	strcat(text, p);
+
+	SV_SendServerCommand(cl, "javascript \"%s\"", text);
+}
+
 
 /*
 ==================
@@ -1436,6 +1475,10 @@ void SV_AddOperatorCommands( void ) {
 	}
 	initialized = qtrue;
 
+	Com_Printf( "TESTING \n" );
+	Com_Printf( "TESTING \n" );
+	Com_Printf( "TESTING \n" );
+	Com_Printf( "TESTING \n" );
 	Cmd_AddCommand ("heartbeat", SV_Heartbeat_f);
 	Cmd_AddCommand ("kick", SV_Kick_f);
 #ifndef STANDALONE
@@ -1469,6 +1512,7 @@ void SV_AddOperatorCommands( void ) {
 	if( com_dedicated->integer ) {
 		Cmd_AddCommand ("say", SV_ConSay_f);
 		Cmd_AddCommand ("tell", SV_ConTell_f);
+		Cmd_AddCommand ("javascript", SV_ConJavascript_f);
 	}
 	
 	Cmd_AddCommand("rehashbans", SV_RehashBans_f);

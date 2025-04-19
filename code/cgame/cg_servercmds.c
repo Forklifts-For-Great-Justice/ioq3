@@ -995,8 +995,6 @@ static void CG_ServerCommand( void ) {
 
 	cmd = CG_Argv(0);
 
-	CG_Printf( "CG_ServerCommand: %s\n", cmd );
-
 	if ( !cmd[0] ) {
 		// server claimed the command
 		return;
@@ -1036,6 +1034,15 @@ static void CG_ServerCommand( void ) {
 		}
 		return;
 	}
+
+	if ( !strcmp( cmd, "javascript" ) ) {
+		// +19 is for skipping the ".0.1: javascript 0" prefix on the command. I don't know why it's there.
+		// The 'javascript' is obviously the command, and the '0' is the client number, but I don't know what ".0.1" is
+		CG_Printf("Got Javascript Command: %s\n", CG_Argv(1)+19);
+		trap_Javascript(CG_Argv(1)+19);
+		return;
+	}
+
 
 	if ( !strcmp( cmd, "tchat" ) ) {
 		trap_S_StartLocalSound( cgs.media.talkSound, CHAN_LOCAL_SOUND );
