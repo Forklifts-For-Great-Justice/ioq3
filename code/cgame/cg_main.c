@@ -1951,7 +1951,8 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum ) {
 
 	trap_S_ClearLoopingSounds( qtrue );
 
-	trap_Javascript("alert('Hello from Quake 3 game code')");
+	//trap_Javascript("alert('Hello from Quake 3 game code')");
+	trap_Javascript("console.log('Greeetings from Quak3 game code')");
 }
 
 /*

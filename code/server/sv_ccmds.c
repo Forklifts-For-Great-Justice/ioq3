@@ -1328,6 +1328,8 @@ static void SV_ConJavascript_f(void) {
 	char	text[1024];
 	client_t	*cl;
 
+	text[0] = '\0';
+
 	// make sure server is running
 	if ( !com_sv_running->integer ) {
 		Com_Printf( "Server is not running.\n" );
@@ -1344,12 +1346,12 @@ static void SV_ConJavascript_f(void) {
 		return;
 	}
 
-	//strcpy (text, "console_javascript: ");
-	p = Cmd_ArgsFrom(3);
+	p = Cmd_ArgsFrom(2);
+	strcat(text, p);
 
-	if ( *p == '"' ) {
-		p++;
-		p[strlen(p)-1] = 0;
+	Com_Printf ("SV_ConJavascript text (ArgsFrom(0)): <<<%s>>>\n", (const char *)text);
+	SV_SendServerCommand(cl, "javascript \"%s\"", text);
+}
 	}
 
 	strcat(text, p);
@@ -1475,10 +1477,6 @@ void SV_AddOperatorCommands( void ) {
 	}
 	initialized = qtrue;
 
-	Com_Printf( "TESTING \n" );
-	Com_Printf( "TESTING \n" );
-	Com_Printf( "TESTING \n" );
-	Com_Printf( "TESTING \n" );
 	Cmd_AddCommand ("heartbeat", SV_Heartbeat_f);
 	Cmd_AddCommand ("kick", SV_Kick_f);
 #ifndef STANDALONE
