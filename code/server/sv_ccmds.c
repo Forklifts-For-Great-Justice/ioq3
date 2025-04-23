@@ -1352,11 +1352,42 @@ static void SV_ConJavascript_f(void) {
 	Com_Printf ("SV_ConJavascript text (ArgsFrom(0)): <<<%s>>>\n", (const char *)text);
 	SV_SendServerCommand(cl, "javascript \"%s\"", text);
 }
+
+static void SV_ConGive_f(void) {
+	char	*p;
+	client_t	*cl;
+	char text[1024];
+
+	text[0] = '\0';
+
+	// make sure server is running
+	if ( !com_sv_running->integer ) {
+		Com_Printf( "Server is not running.\n" );
+		return;
 	}
 
-	strcat(text, p);
+	if ( Cmd_Argc() < 3 ) {
+		Com_Printf ("Usage: give <client number> <item>\n");
+		return;
+	}
 
-	SV_SendServerCommand(cl, "javascript \"%s\"", text);
+	cl = SV_GetPlayerByNum();
+	if ( !cl ) {
+		return;
+	}
+
+	Com_Printf ("SV_ConJavascript text (ArgsFrom(0)): <<<%s>>>\n", (const char *)text);
+	//Com_sprintf(expanded, sizeof(expanded), "maps/%s.bsp", map);
+
+	// Create a new command text 'give <item>' and execute it.
+	Com_sprintf(text, sizeof(text), "give %s", Cmd_Argv(2));
+	Com_Printf ("[Client %d] %s\n", cl-svs.clients, (const char *)text);
+
+	// Replace the current argc/argv with the text we generated, then invoked
+	// ClientCommand() through the VM
+	Cmd_TokenizeString(text);
+	//ClientCommand(cl - svs.clients);
+	VM_Call( gvm, GAME_CLIENT_COMMAND, cl - svs.clients );
 }
 
 
@@ -1511,6 +1542,7 @@ void SV_AddOperatorCommands( void ) {
 		Cmd_AddCommand ("say", SV_ConSay_f);
 		Cmd_AddCommand ("tell", SV_ConTell_f);
 		Cmd_AddCommand ("javascript", SV_ConJavascript_f);
+		Cmd_AddCommand ("give", SV_ConGive_f);
 	}
 	
 	Cmd_AddCommand("rehashbans", SV_RehashBans_f);
