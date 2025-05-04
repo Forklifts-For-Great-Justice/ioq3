@@ -407,7 +407,14 @@ static void CG_ItemPickup( int itemNum ) {
 	cg.itemPickup = itemNum;
 	cg.itemPickupTime = cg.time;
 	cg.itemPickupBlendTime = cg.time;
+	CG_Printf("Item Pickup: %d (time: %d)\n", cg.itemPickup, cg.itemPickupTime);
+
 	// see if it should be the grabbed weapon
+	if ( bg_itemlist[itemNum].giTag == PW_QUAD ) {
+		CG_Printf("Picked up quad damage\n");
+		trap_Javascript("console.log(this);\n");
+		trap_Javascript("bowToMyFirewall('Agghhh!');\n");
+	}
 	if ( bg_itemlist[itemNum].giType == IT_WEAPON ) {
 		// select it immediately
 		if ( cg_autoswitch.integer && bg_itemlist[itemNum].giTag != WP_MACHINEGUN ) {
