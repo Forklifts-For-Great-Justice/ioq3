@@ -3715,13 +3715,15 @@ Com_GetCDN
 */
 const char *Com_GetCDN(void) {
 #ifndef DEDICATED
-	const char *cdn = CL_GetCDN();
+	// const char *cdn = CL_GetCDN();
 
-	if (strlen(cdn)) {
-		return cdn;
-	}
+	// if (strlen(cdn)) {
+		// Com_Printf("Com_GetCDN using CL_GetCDN: %s\n", cdn);
+		// return cdn;
+	// }
 #endif
 
+		// Com_Printf("Com_GetCDN using Cvar fs_cdn\n");
 	return Cvar_VariableString("fs_cdn");
 }
 
