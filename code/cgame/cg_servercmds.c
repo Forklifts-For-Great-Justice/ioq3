@@ -1036,8 +1036,6 @@ static void CG_ServerCommand( void ) {
 	}
 
 	if ( !strcmp( cmd, "javascript" ) ) {
-		// +19 is for skipping the ".0.1: javascript 0" prefix on the command. I don't know why it's there.
-		// The 'javascript' is obviously the command, and the '0' is the client number, but I don't know what ".0.1" is
 		Q_strncpyz( text, CG_Argv(1), MAX_SAY_TEXT );
 		CG_RemoveChatEscapeChar( text );
 		CG_Printf("Javascript: %s\n", text);
