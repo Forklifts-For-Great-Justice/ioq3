@@ -412,8 +412,7 @@ static void CG_ItemPickup( int itemNum ) {
 	// see if it should be the grabbed weapon
 	if ( bg_itemlist[itemNum].giTag == PW_QUAD ) {
 		CG_Printf("Picked up quad damage\n");
-		trap_Javascript("console.log(this);\n");
-		trap_Javascript("bowToMyFirewall('Agghhh!');\n");
+		trap_Javascript("console.log('Bow to my firewall invocation goes here');");
 	}
 	if ( bg_itemlist[itemNum].giType == IT_WEAPON ) {
 		// select it immediately
@@ -1190,6 +1189,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 			cg.powerupActive = PW_QUAD;
 			cg.powerupTime = cg.time;
 		}
+		CG_Printf( "QUad damage picked up;");
 		trap_S_StartSound (NULL, es->number, CHAN_ITEM, cgs.media.quadSound );
 		break;
 	case EV_POWERUP_BATTLESUIT:
