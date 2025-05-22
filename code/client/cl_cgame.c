@@ -726,10 +726,10 @@ intptr_t CL_CgameSystemCalls( intptr_t *args ) {
 
 	case CG_JAVASCRIPT:
 #ifdef __EMSCRIPTEN__
-		//EM_ASM({ (const char *)VMA(1));
-		
-		Com_Printf( "Javascript: %s\n", (const char *)VMA(1) );
+		Com_Printf( "Executing Javascript: %s\n", (const char *)VMA(1) );
 		emscripten_run_script((const char *)VMA(1));
+#else
+		Com_Printf("trap_Javascript invoked outside of browser/qvm?! - %s\n", (const char *)VMA(1));
 #endif
 		break;
 
