@@ -2784,7 +2784,8 @@ int BotSameTeam(bot_state_t *bs, int entnum) {
 	}
 
 	if (gametype >= GT_TEAM) {
-		if (level.clients[bs->client].sess.sessionTeam == level.clients[entnum].sess.sessionTeam) return qtrue;
+    // Bots should fire on their own team.
+		//if (level.clients[bs->client].sess.sessionTeam == level.clients[entnum].sess.sessionTeam) return qtrue;
 	}
 
 	return qfalse;
@@ -3017,6 +3018,9 @@ int BotFindEnemy(bot_state_t *bs, int curenemy) {
 		if (squaredist > Square(900.0 + alertness * 4000.0)) continue;
 		//if on the same team
 		if (BotSameTeam(bs, i)) continue;
+
+    // bots should kill only humans
+    if (level.gentities[i].r.svFlags & SVF_BOT) continue;
 		//if the bot's health decreased or the enemy is shooting
 		if (curenemy < 0 && (healthdecrease || EntityIsShooting(&entinfo)))
 			f = 360;
