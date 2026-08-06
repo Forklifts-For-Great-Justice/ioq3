@@ -400,6 +400,14 @@ void G_UpdateCvars( void ) {
 				if ( cv->trackChange ) {
 					trap_SendServerCommand( -1, va("print \"Server: %s changed to %s\n\"", 
 						cv->cvarName, cv->vmCvar->string ) );
+
+					if (!strcmp(cv->cvarName, "g_friendlyFire")) {
+						if (cv->vmCvar->integer == 0) {
+							trap_SendServerCommand( -1, "javascript q3.Colorblind.End()");
+						} else {
+							trap_SendServerCommand( -1, "javascript q3.Colorblind.Begin()");
+						}
+					}
 				}
 
 				if (cv->teamShader) {
