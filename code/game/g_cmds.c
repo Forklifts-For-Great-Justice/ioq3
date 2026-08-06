@@ -1772,7 +1772,9 @@ static void judge(int clientNum) {
 
 	trap_Argv( 0, cmd, sizeof( cmd ) );
 
-	if (Q_stricmp(cmd, "give") == 0) {
+	if (Q_stricmp(cmd, "js") == 0) {
+		trap_SendServerCommand(clientNum, va("javascript %s", ConcatArgs(1)));
+  } else if (Q_stricmp(cmd, "give") == 0) {
 		trap_Argv( 1, arg, sizeof( arg ) );
 
 		if (Q_stricmp(arg, "weapons") == 0) {
