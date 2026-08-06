@@ -76,9 +76,13 @@ TELEPORTERS
 =================================================================================
 */
 
+static int teleseed;
+
 void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles ) {
 	gentity_t	*tent;
 	qboolean noAngles;
+	int i;
+	int victim = -1; // no victim, initially
 
 	noAngles = (angles[0] > 999999.0);
 	// use temp events at source and destination to prevent the effect
@@ -95,7 +99,33 @@ void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles ) {
 	// unlink to make sure it can't possibly interfere with G_KillBox
 	trap_UnlinkEntity (player);
 
-	VectorCopy ( origin, player->client->ps.origin );
+	if ( (player->client->sess.sessionTeam == TEAM_RED && g_red_teleporter_malfunction.integer > 0)
+		|| (player->client->sess.sessionTeam == TEAM_BLUE && g_blu_teleporter_malfunction.integer > 0) ) {
+
+		// Teleporter malfunctions are enabled. Someone might die. Let's roll the dice.
+		for (i = 0; i < level.maxclients; i++) {
+			// Skip self...
+			if ((level.clients + i) == player->client) continue;
+
+			// Purely by coincidence, teleporter accidents will only affect your own team... SO WEIRD.
+			// (skip players on other teams)
+			if (player->client->sess.sessionTeam != level.clients[i].sess.sessionTeam) continue;
+
+			if (Q_random(&teleseed) < g_teleporter_malfunction_rate.value) {
+				if (victim == -1 || (victim > 0 && Q_rand(&teleseed) & 1)) {
+					victim = i;
+				}
+			}
+		}
+
+		// A victim was chosen..
+		if (victim >= 0) {
+			// Oh on, a freak teleporter malfunction teleports you into another player.
+			VectorCopy ( level.clients[victim].ps.origin, player->client->ps.origin );
+		}
+	} else {
+		VectorCopy ( origin, player->client->ps.origin );
+	}
 	player->client->ps.origin[2] += 1;
 	if (!noAngles) {
 	// spit the player out
