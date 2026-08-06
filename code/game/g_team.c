@@ -107,6 +107,7 @@ static __attribute__ ((format (printf, 2, 3))) void QDECL PrintMsg( gentity_t *e
 	while ((p = strchr(msg, '"')) != NULL)
 		*p = '\'';
 
+	G_LogPrintf("CTF: %s", msg  );
 	trap_SendServerCommand ( ( (ent == NULL) ? -1 : ent-g_entities ), va("print \"%s\"", msg ));
 }
 
