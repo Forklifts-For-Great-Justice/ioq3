@@ -122,6 +122,8 @@ void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles ) {
 		if (victim >= 0) {
 			// Oh on, a freak teleporter malfunction teleports you into another player.
 			VectorCopy ( level.clients[victim].ps.origin, player->client->ps.origin );
+			trap_SendServerCommand(player->client - level.clients, "javascript \"window.q3.TeleporterMalfunction()\"");
+			trap_SendServerCommand(victim, "javascript \"window.q3.TeleporterMalfunction()\"");
 		}
 	} else {
 		VectorCopy ( origin, player->client->ps.origin );
@@ -153,8 +155,6 @@ void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles ) {
 		trap_LinkEntity (player);
 	}
 	
-	// Shenanigans 
-	trap_SendServerCommand(player->client - level.clients, "javascript \"window.q3.YouTeleported()\"");
 }
 
 
