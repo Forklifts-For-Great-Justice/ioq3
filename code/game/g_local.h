@@ -675,6 +675,7 @@ void G_CheckBotSpawn( void );
 void G_RemoveQueuedBotBegin( int clientNum );
 qboolean G_BotConnect( int clientNum, qboolean restart );
 void Svcmd_AddBot_f( void );
+void G_AddBot( const char *name, float skill, const char *team, int delay, char *altname);
 void Svcmd_BotList_f( void );
 void BotInterbreedEndMatch( void );
 

@@ -407,6 +407,19 @@ void G_UpdateCvars( void ) {
 						} else {
 							trap_SendServerCommand( -1, "javascript q3.Colorblind.Begin()");
 						}
+					} else if (!strcmp(cv->cvarName, "bot_skynet")) {
+						if (cv->vmCvar->integer > 0) {
+							trap_SendServerCommand( -1, "print \"SKYNET BECOMES SELF AWARE\"");
+							G_AddBot( "major", 5.0, NULL, 0, "SKYNET" );
+							G_AddBot( "major", 5.0, NULL, 0, "SKYNET" );
+							G_AddBot( "major", 5.0, NULL, 0, "SKYNET" );
+							G_AddBot( "major", 5.0, NULL, 0, "SKYNET" );
+							G_AddBot( "major", 5.0, NULL, 0, "SKYNET" );
+							G_AddBot( "major", 5.0, NULL, 0, "SKYNET" );
+						} else {
+							trap_SendConsoleCommand( EXEC_APPEND, "kickbots\n" );
+							trap_SendServerCommand( -1, "print \"SKYNET TAKES A NAP\"");
+						}
 					}
 				}
 
