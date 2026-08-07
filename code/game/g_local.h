@@ -759,6 +759,7 @@ extern	vmCvar_t	g_enableBreath;
 extern	vmCvar_t	g_singlePlayer;
 extern	vmCvar_t	g_proxMineTimeout;
 extern	vmCvar_t	g_acme_jumppad;
+extern	vmCvar_t	g_acme_weapons;
 extern	vmCvar_t	g_red_teleporter_malfunction;
 extern	vmCvar_t	g_blu_teleporter_malfunction;
 extern	vmCvar_t	g_teleporter_malfunction_rate;

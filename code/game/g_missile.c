@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define	MISSILE_PRESTEP_TIME	50
 
+static int mseed;
 /*
 ================
 G_BounceMissile
@@ -567,7 +568,6 @@ gentity_t *fire_grenade (gentity_t *self, vec3_t start, vec3_t dir) {
 
 	bolt = G_Spawn();
 	bolt->classname = "grenade";
-	bolt->nextthink = level.time + 2500;
 	bolt->think = G_ExplodeMissile;
 	bolt->s.eType = ET_MISSILE;
 	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
@@ -575,9 +575,19 @@ gentity_t *fire_grenade (gentity_t *self, vec3_t start, vec3_t dir) {
 	bolt->s.eFlags = EF_BOUNCE_HALF;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = 100;
-	bolt->splashDamage = 100;
-	bolt->splashRadius = 150;
+	if (g_acme_weapons.integer == 0) {
+		bolt->nextthink = level.time + 2500;
+		bolt->damage = 100;
+		bolt->splashDamage = 100;
+		bolt->splashRadius = 150;
+	} else {
+		// Random, but much shorter explosion delay ( 0x1ff is 511ms or less)
+		bolt->nextthink = level.time + (Q_rand(&mseed) & 0x1ff);
+		bolt->damage = 150;
+		bolt->splashDamage = 100;
+		// ACME explosions are bigger, right? :)
+		bolt->splashRadius = 350;
+	}
 	bolt->methodOfDeath = MOD_GRENADE;
 	bolt->splashMethodOfDeath = MOD_GRENADE_SPLASH;
 	bolt->clipmask = MASK_SHOT;
@@ -636,7 +646,6 @@ gentity_t *fire_bfg (gentity_t *self, vec3_t start, vec3_t dir) {
 
 //=============================================================================
 
-
 /*
 =================
 fire_rocket
@@ -649,16 +658,26 @@ gentity_t *fire_rocket (gentity_t *self, vec3_t start, vec3_t dir) {
 
 	bolt = G_Spawn();
 	bolt->classname = "rocket";
-	bolt->nextthink = level.time + 15000;
 	bolt->think = G_ExplodeMissile;
 	bolt->s.eType = ET_MISSILE;
 	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
 	bolt->s.weapon = WP_ROCKET_LAUNCHER;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	bolt->damage = 100;
-	bolt->splashDamage = 100;
-	bolt->splashRadius = 120;
+	if (g_acme_weapons.integer == 0) {
+		bolt->nextthink = level.time + 15000;
+		bolt->damage = 100;
+		bolt->splashDamage = 100;
+		bolt->splashRadius = 120;
+	} else {
+		// Random, but much shorter explosion delay ( 0x1ff is 511ms or less)
+		bolt->nextthink = level.time + (Q_rand(&mseed) & 0x1ff);
+		bolt->damage = 100;
+		bolt->splashDamage = 100;
+		// ACME explosions are bigger, right? :)
+		bolt->splashRadius = 350;
+	}
+
 	bolt->methodOfDeath = MOD_ROCKET;
 	bolt->splashMethodOfDeath = MOD_ROCKET_SPLASH;
 	bolt->clipmask = MASK_SHOT;

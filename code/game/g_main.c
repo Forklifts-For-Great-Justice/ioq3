@@ -97,12 +97,13 @@ vmCvar_t	g_enableBreath;
 vmCvar_t	g_proxMineTimeout;
 #endif
 
-
 vmCvar_t	g_testing;
 vmCvar_t	g_acme_jumppad;
+vmCvar_t	g_acme_weapons;
 vmCvar_t	g_red_teleporter_malfunction;
 vmCvar_t	g_blu_teleporter_malfunction;
 vmCvar_t	g_teleporter_malfunction_rate;
+
 extern vmCvar_t bot_skynet;
 
 static cvarTable_t		gameCvarTable[] = {
@@ -193,6 +194,7 @@ static cvarTable_t		gameCvarTable[] = {
 
 	{ &g_testing, "g_testing", "0", 0, 0, qfalse},
 	{ &g_acme_jumppad, "g_acme_jumppad", "0", 0, 0, qfalse},
+	{ &g_acme_weapons, "g_acme_weapons", "0", 0, 0, qfalse},
 	{ &g_red_teleporter_malfunction, "g_red_teleporter_malfunction", "0", 0, 0, qfalse},
 	{ &g_blu_teleporter_malfunction, "g_blu_teleporter_malfunction", "0", 0, 0, qfalse},
 	{ &g_teleporter_malfunction_rate, "g_teleporter_malfunction_rate", "0.50", 0, 0, qfalse},
