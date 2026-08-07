@@ -763,6 +763,7 @@ extern	vmCvar_t	g_acme_weapons;
 extern	vmCvar_t	g_red_teleporter_malfunction;
 extern	vmCvar_t	g_blu_teleporter_malfunction;
 extern	vmCvar_t	g_teleporter_malfunction_rate;
+extern	vmCvar_t	g_surprise;
 extern  vmCvar_t	g_testing;
 
 extern	vmCvar_t	bot_skynet;

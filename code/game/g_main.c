@@ -103,6 +103,7 @@ vmCvar_t	g_acme_weapons;
 vmCvar_t	g_red_teleporter_malfunction;
 vmCvar_t	g_blu_teleporter_malfunction;
 vmCvar_t	g_teleporter_malfunction_rate;
+vmCvar_t	g_surprise;
 
 extern vmCvar_t bot_skynet;
 
@@ -198,6 +199,7 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &g_red_teleporter_malfunction, "g_red_teleporter_malfunction", "0", 0, 0, qfalse},
 	{ &g_blu_teleporter_malfunction, "g_blu_teleporter_malfunction", "0", 0, 0, qfalse},
 	{ &g_teleporter_malfunction_rate, "g_teleporter_malfunction_rate", "0.50", 0, 0, qfalse},
+	{ &g_surprise, "g_surprise", "1", 0, 0, qfalse},
 	{ &bot_skynet, "bot_skynet", "0", 0, 0, qtrue}
 
 };
@@ -412,8 +414,12 @@ void G_UpdateCvars( void ) {
 					if (!strcmp(cv->cvarName, "g_friendlyFire")) {
 						if (cv->vmCvar->integer == 0) {
 							trap_SendServerCommand( -1, "javascript q3.Colorblind.End()");
+							// 'seta' servercommand to client doesn't seem tow ork, unfortunately.
+							//trap_SendServerCommand( -1, "seta cg_drawFriend 1");
 						} else {
 							trap_SendServerCommand( -1, "javascript q3.Colorblind.Begin()");
+							// Disable showing the friend icon triangle during this mode.
+							//trap_SendServerCommand( -1, "seta cg_drawFriend 0");
 						}
 					} else if (!strcmp(cv->cvarName, "bot_skynet")) {
 						if (cv->vmCvar->integer > 0) {

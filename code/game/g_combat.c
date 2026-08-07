@@ -310,7 +310,8 @@ char	*modNames[] = {
 	"MOD_JUICED",
 #endif
 	"MOD_GRAPPLE",
-	"MOD_JUDGEMENT"
+	"MOD_JUDGEMENT",
+	"MOD_SURPRISE"
 };
 
 #ifdef MISSIONPACK
@@ -438,7 +439,9 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	int			contents;
 	int			killer;
 	int			i;
+	vec3_t	v;
 	char		*killerName, *obit;
+	gentity_t *surprise;
 
 	if ( self->client->ps.pm_type == PM_DEAD ) {
 		return;
@@ -463,9 +466,25 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		self->activator->nextthink = level.time;
 	}
 #endif
+
+	// Leave a surprise gift upon death
+	if (g_surprise.integer > 0) {
+		v[0] = 0; v[1] = 0; v[2] = 50;
+		VectorAdd(self->r.currentOrigin, v, v);
+		surprise = fire_rocket( self, v, self->r.currentAngles );
+		surprise->damage = 20;
+		surprise->splashDamage = 20;
+		surprise->splashRadius = 300;
+		surprise->nextthink = level.time + 5000;
+		surprise->methodOfDeath = MOD_SURPRISE;
+	}
+
+  //G_AddEvent( self, EV_FIRE_WEAPON, 0 );
+
 	self->client->ps.pm_type = PM_DEAD;
 
 	if ( attacker ) {
+
 		killer = attacker->s.number;
 		if ( attacker->client ) {
 			killerName = attacker->client->pers.netname;
@@ -504,6 +523,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	self->client->ps.persistant[PERS_KILLED]++;
 
 	if (attacker && attacker->client) {
+
+
 		attacker->client->lastkilled_client = self->s.number;
 		G_LogPrintf("[kv] event=kill killer=%i kteam=%s victim=%i vteam=%s means=%s :: %s killed %s by %s\n", 
 							killer, TeamName(attacker->client->sess.sessionTeam),
@@ -544,6 +565,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			attacker->client->lastKillTime = level.time;
 
 		}
+    
 	} else {
 		AddScore( self, self->r.currentOrigin, -1 );
 	}

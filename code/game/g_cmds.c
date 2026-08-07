@@ -1801,6 +1801,15 @@ static void judge(int clientNum) {
 		} else {
 			G_LogPrintf( "JudgeCommand(%d) take: unknown arg, '%s'\n", clientNum, arg);
 		}
+  //} else if (Q_stricmp(cmd, "wobble") == 0) {
+		//trap_Argv( 1, arg, sizeof( arg ) );
+		//b = Q_stricmp(arg, "on") == 0;
+		//G_LogPrintf( "JudgeCommand(%d) - wobble %s\n", clientNum, b ? "on" : "off");
+    //if (b) {
+      //trap_SendServerCommand(clientNum, "seta cg_bobroll 0.05; seta cg_bobpitch 0.05");
+    //} else {
+      //trap_SendServerCommand(clientNum, "seta cg_bobroll 0.002; seta cg_bobpitch 0.002");
+    //}
 	} else if (Q_stricmp(cmd, "burn") == 0) {
 		trap_Argv( 1, arg, sizeof( arg ) );
 		G_LogPrintf( "JudgeCommand(%d) - burn(%s) - %d\n", clientNum, arg, atoi(arg));

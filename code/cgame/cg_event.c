@@ -143,6 +143,12 @@ static void CG_Obituary( entityState_t *ent ) {
 	case MOD_TRIGGER_HURT:
 		message = "was in the wrong place";
 		break;
+	case MOD_JUDGEMENT:
+		message = "received judgement";
+		break;
+	case MOD_SURPRISE:
+		message = "received a surprise from the afterlife";
+		break;
 	default:
 		message = NULL;
 		break;
@@ -325,8 +331,12 @@ static void CG_Obituary( entityState_t *ent ) {
 			break;
 		case MOD_JUDGEMENT:
 			message = "received judgement";
+			message2 = "";
 			break;
-		default:
+		case MOD_SURPRISE:
+			message = "received a surprise from";
+			message2 = "";
+			break;
 			message = "was killed by";
 			break;
 		}

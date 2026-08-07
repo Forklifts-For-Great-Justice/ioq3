@@ -2566,6 +2566,11 @@ void CG_Player( centity_t *cent ) {
 
 	CG_PositionRotatedEntityOnTag( &head, &torso, ci->torsoModel, "tag_head");
 
+	// Big head.
+	VectorScale( head.axis[0], 2, head.axis[0] );
+	VectorScale( head.axis[1], 2, head.axis[1] );
+	VectorScale( head.axis[2], 2, head.axis[2] );
+
 	head.shadowPlane = shadowPlane;
 	head.renderfx = renderfx;
 

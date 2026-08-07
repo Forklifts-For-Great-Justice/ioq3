@@ -664,20 +664,6 @@ gentity_t *fire_rocket (gentity_t *self, vec3_t start, vec3_t dir) {
 	bolt->s.weapon = WP_ROCKET_LAUNCHER;
 	bolt->r.ownerNum = self->s.number;
 	bolt->parent = self;
-	if (g_acme_weapons.integer == 0) {
-		bolt->nextthink = level.time + 15000;
-		bolt->damage = 100;
-		bolt->splashDamage = 100;
-		bolt->splashRadius = 120;
-	} else {
-		// Random, but much shorter explosion delay ( 0x1ff is 511ms or less)
-		bolt->nextthink = level.time + (Q_rand(&mseed) & 0x1ff);
-		bolt->damage = 100;
-		bolt->splashDamage = 100;
-		// ACME explosions are bigger, right? :)
-		bolt->splashRadius = 350;
-	}
-
 	bolt->methodOfDeath = MOD_ROCKET;
 	bolt->splashMethodOfDeath = MOD_ROCKET_SPLASH;
 	bolt->clipmask = MASK_SHOT;
@@ -686,7 +672,25 @@ gentity_t *fire_rocket (gentity_t *self, vec3_t start, vec3_t dir) {
 	bolt->s.pos.trType = TR_LINEAR;
 	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;		// move a bit on the very first frame
 	VectorCopy( start, bolt->s.pos.trBase );
-	VectorScale( dir, 900, bolt->s.pos.trDelta );
+	if (g_acme_weapons.integer == 0) {
+		bolt->nextthink = level.time + 15000;
+		bolt->damage = 100;
+		bolt->splashDamage = 100;
+		bolt->splashRadius = 120;
+    VectorScale( dir, 900, bolt->s.pos.trDelta );
+	} else {
+		// Random, but much shorter explosion delay ( 0x3ff is 511ms or less)
+		bolt->nextthink = level.time + (Q_rand(&mseed) & 0x3ff) + 1000;
+		bolt->damage = 100;
+		bolt->splashDamage = 100;
+		// ACME explosions are bigger, right? :)
+		bolt->splashRadius = 350;
+
+		// Random speed.
+		//VectorScale( dir, Q_rand(&mseed) & 0x7ff /* 2047 or less? */, bolt->s.pos.trDelta );
+		VectorScale( dir, Q_rand(&mseed) & 0x7ff , bolt->s.pos.trDelta );
+	}
+
 	SnapVector( bolt->s.pos.trDelta );			// save net bandwidth
 	VectorCopy (start, bolt->r.currentOrigin);
 
