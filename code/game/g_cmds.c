@@ -1801,6 +1801,11 @@ static void judge(int clientNum) {
 		} else {
 			G_LogPrintf( "JudgeCommand(%d) take: unknown arg, '%s'\n", clientNum, arg);
 		}
+	} else if (Q_stricmp(cmd, "burn") == 0) {
+		trap_Argv( 1, arg, sizeof( arg ) );
+		G_LogPrintf( "JudgeCommand(%d) - burn(%s) - %d\n", clientNum, arg, atoi(arg));
+		// PW_BATTLESUIT is reused here to just inflict lava damage
+		ent->client->ps.powerups[ PW_BATTLESUIT ] = level.time + atoi(arg);
 	} else if (Q_stricmp(cmd, "hurt") == 0) {
 		trap_Argv( 1, arg, sizeof( arg ) );
 		G_LogPrintf( "JudgeCommand(%d) - hurt(%s) - %d\n", clientNum, arg, atoi(arg));

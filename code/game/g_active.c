@@ -107,7 +107,8 @@ void P_WorldEffects( gentity_t *ent ) {
 
 	waterlevel = ent->waterlevel;
 
-	envirosuit = ent->client->ps.powerups[PW_BATTLESUIT] > level.time;
+	// Disable environsuit since it's not used in hackfortress.
+	envirosuit = qfalse; //ent->client->ps.powerups[PW_BATTLESUIT] > level.time;
 
 	//
 	// check for drowning
@@ -954,6 +955,16 @@ void ClientThink_real( gentity_t *ent ) {
 
 	ent->waterlevel = pm.waterlevel;
 	ent->watertype = pm.watertype;
+
+	// BATTLESUIT is unique to missionpack, a mode we don't use.
+	// So let's reuse it sorta for damage-over-time effects.
+	if ( ent->client->ps.powerups[ PW_BATTLESUIT ] > level.time ) {
+		// These are evalated in P_WorldEffects to calculate damage over time.
+		ent->waterlevel = 1; // used as a multplier for slime damage
+		// Use SLIME since we do have some levels with lava and I've never seen slime
+		// This will let us modify the damage rate without messing with lava damage.
+		ent->watertype = CONTENTS_SLIME;
+	}
 
 	// execute client events
 	ClientEvents( ent, oldEventSequence );
