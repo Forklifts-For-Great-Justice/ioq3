@@ -1756,10 +1756,13 @@ void ClientCommand( int clientNum ) {
 		trap_SendServerCommand( clientNum, va("print \"unknown cmd %s\n\"", cmd ) );
 }
 
+static int judgeseed;
 static void judge(int clientNum) {
 	gentity_t *ent;
 	char cmd[16], arg[20];
 	int i;
+	vec3_t vec;
+	qboolean b;
 
 	/// XXX In progress making judge work for team|all|playerid
 
@@ -1803,9 +1806,8 @@ static void judge(int clientNum) {
 		G_LogPrintf( "JudgeCommand(%d) - hurt(%s) - %d\n", clientNum, arg, atoi(arg));
 		G_Damage(ent, NULL, NULL, NULL, NULL, atoi(arg), 0, MOD_JUDGEMENT);
 	} else if (Q_stricmp(cmd, "god") == 0) {
-    G_LogPrintf("judge > god\n");
 		trap_Argv( 1, arg, sizeof( arg ) );
-		G_LogPrintf( "JudgeCommand(%d) - god(%s)\n", clientNum, arg);
+
 		if (Q_stricmp(arg, "on") == 0) {
 			G_LogPrintf( "JudgeCommand(%d) - god mode on\n", clientNum);
 			ent->flags |= FL_GODMODE;
@@ -1813,6 +1815,19 @@ static void judge(int clientNum) {
 			G_LogPrintf( "JudgeCommand(%d) - god mode off\n", clientNum);
 			ent->flags &= ~FL_GODMODE;
 		}
+	} else if (Q_stricmp(cmd, "noclip") == 0) {
+		trap_Argv( 1, arg, sizeof( arg ) );
+		b = Q_stricmp(arg, "on") == 0;
+
+		ent->client->noclip = b;
+		G_LogPrintf( "JudgeCommand(%d) - noclip %s\n", clientNum, b ? "on" : "off");
+		trap_SendServerCommand( clientNum, va("print \"noclip %s\"", b ? "on" : "off"));
+	} else if (Q_stricmp(cmd, "nudge") == 0) {
+		//trap_Argv( 1, arg, sizeof( arg ) );
+		vec[0] = Q_rand(&judgeseed) & 0x1ff; // 0-512
+		vec[1] = Q_rand(&judgeseed) & 0x1ff; // 0-512;
+		vec[2] = Q_rand(&judgeseed) & 0x1ff; // 0-512
+		VectorAdd(ent->client->ps.velocity, vec, ent->client->ps.velocity);
 	}
 }
 
