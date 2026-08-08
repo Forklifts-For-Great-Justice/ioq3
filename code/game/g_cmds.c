@@ -1757,8 +1757,9 @@ void ClientCommand( int clientNum ) {
 }
 
 static int judgeseed;
+
 static void judge(int clientNum) {
-	gentity_t *ent;
+	gentity_t *ent, *te;
 	char cmd[16], arg[20], arg2[32];
 	int i;
 	vec3_t vec;
@@ -1792,9 +1793,15 @@ static void judge(int clientNum) {
     } else if (Q_stricmp(arg, "quad") == 0) {
 			G_LogPrintf( "JudgeCommand(%d) - giving quad %s (28 vs lookup:%d)\n", clientNum, arg2, BG_FindItemForPowerup(PW_QUAD) - bg_itemlist);
       trap_SendServerCommand(clientNum, "javascript window.q3.QuadDamageBegin()");
+
       G_AddPredictableEvent( ent, EV_ITEM_PICKUP, 28 /* Quad Damage item entry in bg_itemlist */ );
-      //G_AddEvent( ent, EV_ITEM_PICKUP, BG_FindItemForPowerup( PW_QUAD ) - bg_itemlist);
-			G_AddEvent( ent, EV_GENERAL_SOUND, 28);
+
+      // Create a temp entity that simply plays the "quad damage picked up" sound at the player's location.
+      te = G_TempEntity( ent->r.currentOrigin, EV_GLOBAL_ITEM_PICKUP );
+      te->s.eventParm = 28;
+      te->r.svFlags |= SVF_BROADCAST;
+      
+      // Set the player's quad damage power up to expire after the given duratino
 			ent->client->ps.powerups[ PW_QUAD ] = level.time + atoi(arg2);
     } else if (Q_stricmp(arg, "haste") == 0) {
 			G_LogPrintf( "JudgeCommand(%d) - giving haste\n", clientNum);
