@@ -343,7 +343,7 @@ void Cmd_God_f (gentity_t *ent)
 	char	*msg;
 
 	if ( !CheatsOk( ent ) ) {
-    trap_Cvar_Set( "sv_cheats", "1" );
+    //trap_Cvar_Set( "sv_cheats", "1" );
 		return;
 	}
 
