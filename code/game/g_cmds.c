@@ -1759,7 +1759,7 @@ void ClientCommand( int clientNum ) {
 static int judgeseed;
 static void judge(int clientNum) {
 	gentity_t *ent;
-	char cmd[16], arg[20];
+	char cmd[16], arg[20], arg2[32];
 	int i;
 	vec3_t vec;
 	qboolean b;
@@ -1779,6 +1779,7 @@ static void judge(int clientNum) {
 		trap_SendServerCommand(clientNum, va("javascript %s", ConcatArgs(1)));
   } else if (Q_stricmp(cmd, "give") == 0) {
 		trap_Argv( 1, arg, sizeof( arg ) );
+		trap_Argv( 2, arg2, sizeof( arg2 ) );
 
 		if (Q_stricmp(arg, "weapons") == 0) {
 			// All weapons, max ammo.
@@ -1788,6 +1789,32 @@ static void judge(int clientNum) {
 			for ( i = 0 ; i < MAX_WEAPONS ; i++ ) {
 				ent->client->ps.ammo[i] = 999;
 			}
+    } else if (Q_stricmp(arg, "quad") == 0) {
+			G_LogPrintf( "JudgeCommand(%d) - giving quad %s (28 vs lookup:%d)\n", clientNum, arg2, BG_FindItemForPowerup(PW_QUAD) - bg_itemlist);
+      trap_SendServerCommand(clientNum, "javascript window.q3.QuadDamageBegin()");
+      G_AddPredictableEvent( ent, EV_ITEM_PICKUP, 28 /* Quad Damage item entry in bg_itemlist */ );
+      //G_AddEvent( ent, EV_ITEM_PICKUP, BG_FindItemForPowerup( PW_QUAD ) - bg_itemlist);
+			G_AddEvent( ent, EV_GENERAL_SOUND, 28);
+			ent->client->ps.powerups[ PW_QUAD ] = level.time + atoi(arg2);
+    } else if (Q_stricmp(arg, "haste") == 0) {
+			G_LogPrintf( "JudgeCommand(%d) - giving haste\n", clientNum);
+			ent->client->ps.powerups[ PW_HASTE ] = level.time + atoi(arg2);
+    } else if (Q_stricmp(arg, "invis") == 0) {
+			G_LogPrintf( "JudgeCommand(%d) - giving invis\n", clientNum);
+			ent->client->ps.powerups[ PW_INVIS ] = level.time + atoi(arg2);
+    } else if (Q_stricmp(arg, "regen") == 0) {
+			G_LogPrintf( "JudgeCommand(%d) - giving regen\n", clientNum);
+			ent->client->ps.powerups[ PW_REGEN ] = level.time + atoi(arg2);
+    } else if (Q_stricmp(arg, "flight") == 0) {
+			G_LogPrintf( "JudgeCommand(%d) - giving flight\n", clientNum);
+			ent->client->ps.powerups[ PW_FLIGHT ] = level.time + atoi(arg2);
+    } else if (Q_stricmp(arg, "flag") == 0) {
+			G_LogPrintf( "JudgeCommand(%d) - giving flag?\n", clientNum);
+      if (ent->client->sess.sessionTeam == TEAM_RED) {
+        ent->client->ps.powerups[ PW_BLUEFLAG ] = INT_MAX;
+      } else if (ent->client->sess.sessionTeam == TEAM_BLUE) {
+        ent->client->ps.powerups[ PW_REDFLAG ] = INT_MAX;
+      } 
 		} else {
 			G_LogPrintf( "JudgeCommand(%d) give: unknown arg, '%s'\n", clientNum, arg);
 		}
